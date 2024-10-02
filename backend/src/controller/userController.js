@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const { default: mongoose } = require("mongoose");
 
 exports.registerUser = async (req, res) => {
     const {email, password} = req.body;
@@ -21,3 +22,45 @@ exports.registerUser = async (req, res) => {
         })
     }
 };
+
+exports.loginUser = async (req, res) => {
+    const {email, password} = req.body;
+    try {
+        const user = await User.findOne({ 
+            email: email
+        })
+
+        if (!user){
+            return res.status(404).json({
+                message: "User Not Found"
+            })
+        }
+        
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({
+                message: "Invalid Credentials"
+            });
+        }
+
+        const token = jwt.sign({
+            id: user._id
+        }, process.env.JWT_SECRET, {
+            expiresIn:"1h"
+        });
+
+        res.cookie('authToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000,
+        });
+        res.status(200).json({
+            message: "Login Succesfully"
+        })
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        })
+    }
+}
