@@ -6,6 +6,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { connectDB } = require('./src/config/db');
 
+const userRoute= require('./src/routes/userRoute')
+
 dotenv.config();
 connectDB();
 
@@ -17,6 +19,14 @@ app.use(cookieParser());
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
+
+app.use((err, req, res, next) => {
+    res.status(500).json({
+        message: err.message
+    })
+})
+app.use("/api/users/", userRoute);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, ()=>{
     console.log(`Server running on http:localhost:${5000}`)
