@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const { connectDB } = require('./src/config/db');
 
 const userRoute= require('./src/routes/userRoute')
+const accountRoute= require('./src/routes/accountRoute')
 
 dotenv.config();
 connectDB();
@@ -26,6 +27,7 @@ app.use((err, req, res, next) => {
     })
 })
 app.use("/api/users/", userRoute);
+app.use("/api/accounts/", accountRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, ()=>{
