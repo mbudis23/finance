@@ -2,7 +2,8 @@ const Account = require('../models/accountModel');
 const User = require('../models/userModel')
 
 exports.createAccount = async (req, res) =>{
-    const {name, user} = req.body;
+    const {name} = req.body;
+    const user = req.user.id
     try {
         const ExistUser = await User.findById(user)
         if(!ExistUser){
