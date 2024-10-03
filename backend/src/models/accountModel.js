@@ -53,3 +53,5 @@ const accountSchema = new mongoose.Schema({
         ref: 'adjustments'
     }
 })
+
+module.exports = mongoose.model('accounts', accountSchema)
