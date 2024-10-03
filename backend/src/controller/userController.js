@@ -64,3 +64,18 @@ exports.loginUser = async (req, res) => {
         })
     }
 }
+
+exports.deleteUser = async (req, res)=>{
+    const id = req.user.id;
+
+    try {
+        await User.findByIdAndDelete(id);
+        res.status(200).json({
+            message: "Delete User Successfully"
+        })
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        })
+    }
+}
