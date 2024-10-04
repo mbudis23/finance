@@ -1,16 +1,22 @@
 const User = require("../models/userModel");
 const jwt = require('jsonwebtoken');
 
-exports.userExistByEmail = async (req, res) => {
+exports.emailExist = async (req, res, next) => {
     const {email} = req.body;
-    const userExist = await User.findOne({
-        email
-    });
-    if (userExist) {
-        res.status(400);
-        return res.json({
-            message: "Email has been used"
+    try{
+        const userExist = await User.findOne({
+            email
         });
+        if (userExist) {
+            res.status(400);
+            return res.json({
+                message: "Email has been used"
+            });
+        }
+
+        next()
+    } catch (err) {
+        next(err)
     }
 }
 

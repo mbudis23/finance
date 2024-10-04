@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const { registerUser, loginUser, deleteUser } = require("../controller/userController");
-const { userExistByEmail, authenticateToken, userExistByCookies } = require("../middlewares/userMiddleware");
+const { emailExist, authenticateToken, userExistByCookies } = require("../middlewares/userMiddleware");
 
 
-router.post("/register", userExistByEmail, registerUser);
+router.post("/register", emailExist, registerUser);
 router.post("/login", loginUser);
 router.delete("/", authenticateToken, userExistByCookies, deleteUser)
 
