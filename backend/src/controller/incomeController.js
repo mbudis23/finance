@@ -36,3 +36,26 @@ exports.addIncome = async (req, res) => {
         });
     }
 };
+
+exports.removeIncome = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const existIncome = await Income.findById(id);
+        if (!existIncome) {
+            return res.status(404).json({
+                message: "Income not found"
+            });
+        }
+        await Account.findByIdAndUpdate(existIncome.account, {
+            $pull: { incomes: existIncome._id },
+        });
+        await Income.findByIdAndDelete(id);
+        res.status(200).json({
+            message: "Income removed successfully"
+        });
+    } catch (err) {
+        res.status(400).json({
+            message: "Error"
+        })
+    }
+}
