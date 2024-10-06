@@ -59,3 +59,30 @@ exports.removeIncome = async (req, res) => {
         })
     }
 }
+
+exports.editIncome = async (req, res, next) => {
+    const { date, account, streams, amount, notes } = req.body;
+    const { id } = req.params;
+    try{
+        const existIncome = await Income.findById(id);
+        if(!existIncome){
+            return res.status(404).json({
+                message: "Income Not Found"
+            })
+        }
+        await Income.findByIdAndUpdate(id,{
+            date : date,
+            account : account,
+            streams : streams,
+            amount : amount,
+            notes: notes
+        })
+        res.status(200).json({
+            message: "Edit Income Successfully"
+        })
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        })
+    }
+}

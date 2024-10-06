@@ -1,7 +1,9 @@
-const { addIncome, removeIncome } = require('../controller/incomeController');
+const { addIncome, removeIncome, editIncome } = require('../controller/incomeController');
+const { authenticateToken } = require('../middlewares/userMiddleware');
 const router = require('express').Router();
 
-router.post('/', addIncome);
-router.delete('/:id', removeIncome);
+router.post('/', authenticateToken, addIncome);
+router.delete('/:id', authenticateToken, removeIncome);
+router.patch('/:id', authenticateToken, editIncome);
 
 module.exports = router;
