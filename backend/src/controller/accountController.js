@@ -1,4 +1,5 @@
 const Account = require('../models/accountModel');
+const Income = require('../models/incomeModel');
 const User = require('../models/userModel')
 
 exports.createAccount = async (req, res) =>{
@@ -49,6 +50,9 @@ exports.deleteAccount = async (req, res) => {
                 message : "Account not found"
             });
         }
+        await Promise.all(
+            deletedAccount.incomes.map(value => Income.findByIdAndDelete(value))
+        );
         await User.findByIdAndUpdate(
             id,
             { $pull: { accounts: deletedAccount._id } },
