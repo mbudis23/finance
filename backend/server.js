@@ -10,6 +10,7 @@ const userRoute= require('./src/routes/userRoute');
 const accountRoute= require('./src/routes/accountRoute');
 const incomeRoute= require('./src/routes/incomeRoute');
 const expenseRoute = require('./src/routes/expenseRoute');
+const transferRoute = require('./src/routes/transferRoute');
 
 dotenv.config();
 connectDB();
@@ -32,6 +33,7 @@ app.use("/api/users/", userRoute);
 app.use("/api/accounts/", accountRoute);
 app.use("/api/incomes/", incomeRoute);
 app.use("/api/expenses/", expenseRoute);
+app.use("/api/transfers/", transferRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, ()=>{
