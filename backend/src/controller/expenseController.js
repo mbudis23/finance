@@ -57,3 +57,30 @@ exports.removeExpense = async (req, res) => {
         });
     }
 }
+
+exports.editExpense = async (req, res) => {
+    const { date, account, category, amount, notes } = req.body;
+    const { id } = req.params;
+    try {
+        const existExpense = await Expense.findById(id);
+        if(!existExpense){
+            return res.status(404).json({
+                message: "Expense Not Found"
+            })
+        }
+        await Expense.findByIdAndUpdate(id, {
+            date, 
+            account, 
+            category, 
+            amount, 
+            notes
+        });
+        res.status(200).json({
+            message: "Edit Expense Successfully"
+        });
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        });
+    }
+}
