@@ -34,3 +34,26 @@ exports.addExpense = async (req, res) => {
         })
     }
 }
+
+exports.removeExpense = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const existExpense = await Expense.findById(id);
+        if (!existExpense) {
+            return res.status(404).json({
+                message: "Expense not found"
+            });
+        }
+        await Account.findByIdAndUpdate(existExpense.account, {
+            $pull: { expenses: existExpense._id },
+        })
+        await Expense.findByIdAndDelete(id);
+        res.status(200).json({
+            message: "Expense removed successfully"
+        });
+    } catch (err) {
+        res.status(400).json({
+            message: "Expense Remove Failed"
+        });
+    }
+}
