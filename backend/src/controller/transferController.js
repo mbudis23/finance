@@ -50,3 +50,36 @@ exports.addTransfer = async (req, res) => {
         })
     }
 }
+
+
+exports.removeTransfer = async (req, res) => {
+    const {id} = req.params;
+    
+    try {
+        const existTransfer = await Transfer.findById(id);
+        if (!existTransfer) {
+            return res.status(404).json({
+                message: "Transfer not found"
+            })
+        }
+        await Account.findByIdAndUpdate(existTransfer.from, {
+            $pull : { 
+                transfer_out : id,
+                transfer_tax : id
+            }
+        })
+        await Account.findByIdAndUpdate(existTransfer.to, {
+            $pull: {
+                transfer_in: id
+            }
+        })
+        await Transfer.findByIdAndDelete(id)
+        res.status(200).json({
+            message: "Remove transfer successfully"
+        })
+    } catch (err) {
+        res.status(400).json({
+            message: "Remove transfer failed"
+        })
+    }
+}
