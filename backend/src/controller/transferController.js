@@ -83,3 +83,32 @@ exports.removeTransfer = async (req, res) => {
         })
     }
 }
+
+exports.editTransfer = async (req, res) => {
+    const {id} = req.params;
+    const { date, from, to, amount, tax, notes } = req.body;
+
+    try {
+        const existTransfer = await Transfer.findById(id);
+        if (!existTransfer) {
+            return res.status(404).json({
+                message : "Transfer not found"
+            })
+        }
+        await Transfer.findByIdAndUpdate(id, {
+            date,
+            from,
+            to,
+            amount,
+            tax,
+            notes
+        })
+        res.status(200).json({
+            message: "Edit Transfer Successfully"
+        })
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        })
+    }
+}
