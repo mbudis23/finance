@@ -19,4 +19,4 @@ const adjustmentSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('adusments', adjustmentSchema);
+module.exports = mongoose.model('adjusments', adjustmentSchema);
