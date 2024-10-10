@@ -21,6 +21,29 @@ exports.addAdjustment = async (req, res) => {
         await Account.findByIdAndUpdate(account, {
             $push: {adjustment: newAdjustment._id}
         })
+        res.status(200).json({
+            message: "Adjustment Add Successfully"
+        })
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        })
+    }
+}
+
+exports.removeAdjustments = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const existAdjustment = await Adjustment.findById(id);
+        if (!existAdjustment) {
+            return res.status(404).json({
+                message: "Adjustment not found"
+            });
+        }
+        await Adjustment.findByIdAndDelete(id);
+        res.status(200).json({
+            message: "Adjustment removed successfully"
+        });
     } catch (err) {
         res.status(400).json({
             message: err.message
