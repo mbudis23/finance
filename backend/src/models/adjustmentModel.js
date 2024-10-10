@@ -5,7 +5,7 @@ const adjustmentSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    account_id : {
+    account : {
         type: mongoose.Schema.ObjectId,
         ref: 'accounts',
         required: true
