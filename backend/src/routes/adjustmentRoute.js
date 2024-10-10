@@ -1,7 +1,8 @@
-const { addAdjustment, removeAdjustments } = require('../controller/adjustmentController');
+const { addAdjustment, removeAdjustments, editAdjustment } = require('../controller/adjustmentController');
 const router = require('express').Router();
 
 router.post('/', addAdjustment);
-router.delete('/', removeAdjustments);
+router.delete('/:id', removeAdjustments);
+router.patch('/:id', editAdjustment);
 
 module.exports = router;
