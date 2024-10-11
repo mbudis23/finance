@@ -1,4 +1,4 @@
-import RegisterCard from "@/components/registerPage/registerCard";
+import RegisterCard from "@/components/scoped/registerPage/registerCard";
 
 export default function RegisterPage() {
   return (
