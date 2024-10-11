@@ -1,6 +1,8 @@
 const Account = require('../models/accountModel');
 const Income = require('../models/incomeModel');
-const User = require('../models/userModel')
+const User = require('../models/userModel');
+const Expense = require('../models/expenseModel');
+const Adjustment = require('../models/adjustmentModel');
 
 exports.createAccount = async (req, res) =>{
     const {name} = req.body;
@@ -50,9 +52,14 @@ exports.deleteAccount = async (req, res) => {
                 message : "Account not found"
             });
         }
-        await Promise.all(
-            deletedAccount.incomes.map(value => Income.findByIdAndDelete(value))
-        );
+        await Promise.all([
+            ...deletedAccount.incomes.map(value => Income.findByIdAndDelete(value)),
+            ...deletedAccount.expenses.map(value => Expense.findByIdAndDelete(value)),
+            ...deletedAccount.transfer_in.map(value => Transfer.findByIdAndDelete(value)),
+            ...deletedAccount.transfer_out.map(value => Transfer.findByIdAndDelete(value)),
+            ...deletedAccount.transfer_tax.map(value => Transfer.findByIdAndDelete(value)),
+            ...deletedAccount.adjustment.map((value)=> Adjustment.findByIdAndDelete(value))
+        ]);
         await User.findByIdAndUpdate(
             id,
             { $pull: { accounts: deletedAccount._id } },
