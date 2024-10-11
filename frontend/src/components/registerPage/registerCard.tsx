@@ -23,7 +23,7 @@ export default function RegisterCard(){
                 type="password"
                 placeholder="Password"
                 />
-                <button className="bg-black w-full text-white rounded-[4px] px-[16px] py-[4px] hover:font-semibold duration-75 transition-all">Register</button>
+                <button className="bg-black w-full text-white rounded-[4px] px-[16px] py-[4px] hover:underline">Register</button>
             </div>
             <p 
             className='text-red-500 text-center text-[12px]'
@@ -33,7 +33,7 @@ export default function RegisterCard(){
             <p 
             className='text-black text-center'
             >
-                Already have an account? <Link href={'./'}>Login</Link>
+                Already have an account? <Link className="hover:underline" href={'./'}>Login</Link>
             </p>
         </div>
     )
