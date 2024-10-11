@@ -33,7 +33,7 @@ export default function RegisterCard(){
             <p 
             className='text-black text-center'
             >
-                Already have an account? <Link className="hover:underline" href={'./'}>Login</Link>
+                Already have an account? <Link className="hover:underline" href={'/login'}>Login</Link>
             </p>
         </div>
     )
