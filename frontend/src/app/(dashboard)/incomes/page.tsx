@@ -1,6 +1,6 @@
 import { AiOutlineFileAdd, AiOutlineInteraction } from "react-icons/ai";
 
-export default function IncomePage () {
+export default function IncomesPage () {
     return (
         <main className="p-[16px] flex flex-col gap-[16px] ">
             <section className="flex justify-between text-[32px]">
