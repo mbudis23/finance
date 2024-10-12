@@ -10,11 +10,12 @@ export default function TransfersPage () {
                     <AiOutlineFileAdd/>
                 </div>
             </section>
-            <section className="grid grid-cols-5">
+            <section className="grid grid-cols-6">
                 <h1>Date</h1>
-                <h1>Account</h1>
-                <h1>Streams</h1>
+                <h1>From</h1>
+                <h1>To</h1>
                 <h1>Amount</h1>
+                <h1>Tax</h1>
                 <h1>Notes</h1>
             </section>
         </main>
