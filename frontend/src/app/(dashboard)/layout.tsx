@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "../globals.css";
 import NavigationBar from "@/components/global/navigationBar";
 import SideBar from "@/components/global/sideBar";
+import ProtectedLayout from "@/components/global/protectedLayout";
+import { cookies } from "next/headers";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -25,16 +27,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  const token = cookieStore.get('token')?.value || null;
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NavigationBar/>
-        <SideBar/>
-        <div className="min-w-full min-h-screen bg-white text-black pt-[81px] pl-[65px]">
-        {children}
-        </div>
+        <ProtectedLayout token={token}>
+          <NavigationBar/>
+          <SideBar/>
+          <div className="min-w-full min-h-screen bg-white text-black pt-[81px] pl-[65px]">
+          {children}
+          </div>
+        </ProtectedLayout>
       </body>
     </html>
   );
