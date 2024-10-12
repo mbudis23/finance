@@ -4,7 +4,7 @@ export default function ExpensesPage () {
     return (
         <main className="p-[16px] flex flex-col gap-[16px] ">
             <section className="flex justify-between text-[32px]">
-                <h1>Incomes</h1>
+                <h1>Expenses</h1>
                 <div className="flex fap-[16px] items-center">
                     <AiOutlineInteraction/>
                     <AiOutlineFileAdd/>
