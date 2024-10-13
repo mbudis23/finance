@@ -1,11 +1,23 @@
+'use client'
+import AddAccountsCard from "@/components/scoped/accountsPage/addAccountsCard";
+import { useState } from "react";
 import { AiOutlineFileAdd, AiOutlineInteraction } from "react-icons/ai";
 
 export default function AccountsPage(){
+    const [isAddOpen, setIsAddOpen] = useState(false)
     return(
+        <>
+        {isAddOpen&&<AddAccountsCard setIsOpen={setIsAddOpen}/>}
         <main className="p-[16px] flex flex-col gap-[16px]">
             <div className="w-full flex justify-end text-[32px] gap-[16px]">
                 <AiOutlineInteraction/>
-                <AiOutlineFileAdd/>
+                <button
+                onClick={()=>{
+                    setIsAddOpen(true)
+                }}
+                >
+                    <AiOutlineFileAdd/>
+                </button>
             </div>
             <section className="w-full grid grid-cols-9 py-[16px]]">
                 {/* Header */}
@@ -21,5 +33,6 @@ export default function AccountsPage(){
                 {/* Isi */}
             </section>
         </main>
+        </>
     )
 }

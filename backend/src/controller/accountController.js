@@ -5,7 +5,7 @@ const Expense = require('../models/expenseModel');
 const Adjustment = require('../models/adjustmentModel');
 
 exports.createAccount = async (req, res) =>{
-    const {name} = req.body;
+    const {name, initial_balance} = req.body;
     const user = req.user.id
     try {
         const ExistUser = await User.findById(user)
@@ -17,6 +17,7 @@ exports.createAccount = async (req, res) =>{
         const newAccount = new Account({
         name,
         user,
+        initial_balance
         })
         await newAccount.save();
         await User.updateOne({
