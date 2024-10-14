@@ -1,13 +1,15 @@
 'use client'
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState, } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface AddAccountsCardProps {
-    setIsOpen: (isOpen: boolean) => void; 
+    setIsOpen: (isOpen: boolean) => void;
 }
 
 const AddAccountsCard: React.FC<AddAccountsCardProps> = ({ setIsOpen }) => {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         name: "",
         initial_balance: 0
@@ -43,6 +45,7 @@ const AddAccountsCard: React.FC<AddAccountsCardProps> = ({ setIsOpen }) => {
             console.log('Addition success:', response.data.message);
             setErrorMessage(response.data.message);
             setIsOpen(false); 
+            router.refresh();
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
                 console.error('Error during account creation:', error.response ? error.response.data : error.message);

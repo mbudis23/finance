@@ -132,6 +132,7 @@ exports.getAccountsByUserId = async (req, res) => {
                     total_expenses: { $sum: '$expenses.amount' },
                     total_transfer_in: { $sum: '$transfer_in.amount' },
                     total_transfer_out: { $sum: '$transfer_out.amount' },
+                    total_transfer_tax: { $sum: '$transfer_out.tax'},
                     total_adjustments: { $sum: '$adjustments.amount'}
                 }
             },
@@ -145,6 +146,7 @@ exports.getAccountsByUserId = async (req, res) => {
                     total_expenses: 1,
                     total_transfer_in: 1,
                     total_transfer_out: 1,
+                    total_transfer_tax: 1,
                     total_adjustments: 1
                 }
             }
