@@ -37,47 +37,56 @@ exports.createAccount = async (req, res) =>{
 }
 
 exports.deleteAccount = async (req, res) => {
-    const { name } = req.body;
-    const id = req.user.id;
+    const { accountId } = req.params;
+    const userId = req.user.id;
 
     try {
-        const ExistUser = await User.findById(id);
-        if (!ExistUser) {
+        console.log(`User ID: ${userId}, Account ID: ${accountId}`);
+
+        const userExists = await User.findById(userId);
+        if (!userExists) {
             return res.status(400).json({
-                message: "User is not exist"
+                message: "User does not exist"
             });
         }
 
-        const deletedAccount = await Account.findOne({name: name, user: id});
-        if(!deletedAccount) {
+        const accountToDelete = await Account.findOne({ _id: accountId, user: userId });
+        if (!accountToDelete) {
             return res.status(404).json({
-                message : "Account not found"
+                message: "Account not found"
             });
         }
-        await Promise.all([
-            ...deletedAccount.incomes.map(value => Income.findByIdAndDelete(value)),
-            ...deletedAccount.expenses.map(value => Expense.findByIdAndDelete(value)),
-            ...deletedAccount.transfer_in.map(value => Transfer.findByIdAndDelete(value)),
-            ...deletedAccount.transfer_out.map(value => Transfer.findByIdAndDelete(value)),
-            ...deletedAccount.transfer_tax.map(value => Transfer.findByIdAndDelete(value)),
-            ...deletedAccount.adjustment.map((value)=> Adjustment.findByIdAndDelete(value))
-        ]);
-        await User.findByIdAndUpdate(
-            id,
-            { $pull: { accounts: deletedAccount._id } },
-        );
 
-        await Account.findByIdAndDelete(deletedAccount._id);
+        console.log(`Account to delete: ${accountToDelete._id}`); 
+        await Promise.all([
+            Income.deleteMany({ _id: { $in: accountToDelete.incomes } }),
+            Expense.deleteMany({ _id: { $in: accountToDelete.expenses } }),
+            Transfer.deleteMany({ _id: { $in: accountToDelete.transfer_in } }),
+            Transfer.deleteMany({ _id: { $in: accountToDelete.transfer_out } }),
+            Transfer.deleteMany({ _id: { $in: accountToDelete.transfer_tax } }),
+            Adjustment.deleteMany({ _id: { $in: accountToDelete.adjustment } })
+        ]);
+
+        console.log(`Related data deleted for account ${accountToDelete._id}`); 
+        await User.findByIdAndUpdate(
+            userId,
+            { $pull: { accounts: accountToDelete._id } }
+        );
+        await Account.findByIdAndDelete(accountToDelete._id);
+
         res.status(200).json({
-            message: "Delete Account Successfully",
-            deletedAccount
+            message: "Account deleted successfully",
+            deletedAccount: accountToDelete
         });
+
     } catch (err) {
+        console.error(`Error deleting account: ${err.message}`);
         res.status(500).json({
-            message: err.message
+            message: "An error occurred while deleting the account",
+            error: err.message
         });
     }
-}
+};
 
 exports.getAccountsByUserId = async (req, res) => {
     const userId = req.user.id;

@@ -6,7 +6,7 @@ const router = require('express').Router();
 
 
 router.post('/', authenticateToken, createAccount);
-router.delete('/', authenticateToken, deleteAccount);
+router.delete('/:accountId', authenticateToken, deleteAccount);
 router.get('/', authenticateToken, getAccountsByUserId);
 
 module.exports = router;
