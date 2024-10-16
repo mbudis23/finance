@@ -1,10 +1,12 @@
 'use client'
 import AddAccountsCard from "@/components/scoped/accountsPage/addAccountsCard";
+import EditAccountsCard from "@/components/scoped/accountsPage/editAccountCard";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { AiOutlineFileAdd, AiOutlineInteraction, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 interface Account {
+    _id: string,
     name: string,
     initial_balance: number,
     current_balance: number,
@@ -30,28 +32,59 @@ export default function AccountsPage(){
                     Authorization: `Bearer ${token}`
                 }
             });
-            setAllAc(response.data); // Update the state with the fetched data
+            setAllAc(response.data);
         } catch (err: unknown) {
             if (err instanceof Error) {
-                // Safely access the message if it's an instance of Error
                 alert(err.message);
             } else {
-                // Handle other types of errors (e.g., non-Error objects)
                 alert('An unknown error occurred');
             }
         }
     }, [token]);
 
     useEffect(() => {
-        fetchAccounts(); // Call the async function
-    }, [fetchAccounts]); // Dependencies array: Add token if it can change
+        fetchAccounts();
+    }, [fetchAccounts]);
+
+    const handleDelete = async (accountId: string) => {
+        try {
+            await axios.delete(`http://localhost:5000/api/accounts/${accountId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log('Remove Success');
+            fetchAccounts();
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error('Error during account deletion:', error.response ? error.response.data : error.message);
+                alert(error.message);
+            } else {
+                console.error('Unknown error during account deletion:', error);
+            }
+        }
+    };
 
     const [isAddOpen, setIsAddOpen] = useState(false)
+    const [isEditOpen, setIsEditOpen] = useState(false)
+    const [formData, setFormData] = useState({
+        _id: "",
+        initial_balance:0,
+        name: ""
+    })
     return(
         <>
         {isAddOpen&&<AddAccountsCard closeFunction={()=>{
             setIsAddOpen(false);
-            fetchAccounts()
+            fetchAccounts();
+        }}/>}
+        {isEditOpen&&<EditAccountsCard 
+        _id={formData._id}
+        initial_balance={formData.initial_balance}
+        name={formData.name}
+        closeFunction={()=>{
+            setIsEditOpen(false);
+            fetchAccounts();
         }}/>}
         <main className="p-[16px] flex flex-col gap-[16px]">
             <div className="w-full flex justify-end text-[32px] gap-[16px]">
@@ -87,7 +120,7 @@ export default function AccountsPage(){
                             {account.name}
                         </div>
                         <div className="text-right">
-                            Rp{account.initial_balance}
+                            {account.initial_balance}
                         </div>
                         <div className="text-right">
                             {account.current_balance}
@@ -111,8 +144,28 @@ export default function AccountsPage(){
                             {account.total_adjustments}
                         </div>
                         <div className="text-center flex items-center justify-center gap-[8px]">
-                            <AiOutlineEdit/>
-                            <AiOutlineDelete/>
+                            <button onClick={()=>{
+                                setFormData({
+                                    _id: account._id,
+                                    name: account.name,
+                                    initial_balance: account.initial_balance
+                                })
+                                setIsEditOpen(true)
+                            }}>
+                                <AiOutlineEdit/>
+                            </button>
+                            <button
+                            onClick={async () => {
+                                await setFormData({
+                                    _id: account._id,
+                                    name: account.name,
+                                    initial_balance: account.initial_balance
+                                });
+                                handleDelete(account._id);
+                            }}
+                        >
+                            <AiOutlineDelete />
+                        </button>
                         </div>
                     </>
                 ))}
