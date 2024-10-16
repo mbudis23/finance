@@ -5,10 +5,10 @@ import { useState, } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface AddAccountsCardProps {
-    setIsOpen: (isOpen: boolean) => void;
+    closeFunction: () => void;
 }
 
-const AddAccountsCard: React.FC<AddAccountsCardProps> = ({ setIsOpen }) => {
+const AddAccountsCard: React.FC<AddAccountsCardProps> = ({ closeFunction }) => {
     const router = useRouter();
     const [formData, setFormData] = useState({
         name: "",
@@ -44,7 +44,7 @@ const AddAccountsCard: React.FC<AddAccountsCardProps> = ({ setIsOpen }) => {
             });
             console.log('Addition success:', response.data.message);
             setErrorMessage(response.data.message);
-            setIsOpen(false); 
+            closeFunction(); 
             router.refresh();
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
@@ -65,7 +65,7 @@ const AddAccountsCard: React.FC<AddAccountsCardProps> = ({ setIsOpen }) => {
             <div className="h-screen w-full blur-lg" />
             <div className="absolute border-[1px] border-black p-[16px] rounded-[8px] flex flex-col gap-[16px] bg-white">
                 <div className="w-full justify-end flex text-[16px]">
-                    <button onClick={() => setIsOpen(false)}>
+                    <button onClick={() => closeFunction()}>
                         <AiOutlineClose />
                     </button>
                 </div>

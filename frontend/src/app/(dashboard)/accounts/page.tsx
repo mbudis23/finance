@@ -2,7 +2,7 @@
 import AddAccountsCard from "@/components/scoped/accountsPage/addAccountsCard";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { AiOutlineFileAdd, AiOutlineInteraction } from "react-icons/ai";
+import { AiOutlineFileAdd, AiOutlineInteraction, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 interface Account {
     name: string,
@@ -49,7 +49,10 @@ export default function AccountsPage(){
     const [isAddOpen, setIsAddOpen] = useState(false)
     return(
         <>
-        {isAddOpen&&<AddAccountsCard setIsOpen={setIsAddOpen}/>}
+        {isAddOpen&&<AddAccountsCard closeFunction={()=>{
+            setIsAddOpen(false);
+            fetchAccounts()
+        }}/>}
         <main className="p-[16px] flex flex-col gap-[16px]">
             <div className="w-full flex justify-end text-[32px] gap-[16px]">
                 <button onClick={()=>{
@@ -65,46 +68,51 @@ export default function AccountsPage(){
                     <AiOutlineFileAdd/>
                 </button>
             </div>
-            <section className="w-full grid grid-cols-9 py-[16px]]">
+            <section className="w-full grid grid-cols-10 py-[16px]]">
                 {/* Header */}
-                <h1 className="font-bold">Name</h1>
-                <h1 className="font-bold">Initial Balance</h1>
-                <h1 className="font-bold">Balance</h1>
-                <h1 className="font-bold">Incomes</h1>
-                <h1 className="font-bold">Expenses</h1>
-                <h1 className="font-bold">Transfers In</h1>
-                <h1 className="font-bold">Transfers Out</h1>
-                <h1 className="font-bold">Transfers Tax</h1>
-                <h1 className="font-bold">Adjustments</h1>
+                <h1 className="font-bold text-center">Name</h1>
+                <h1 className="font-bold text-center">Initial Balance</h1>
+                <h1 className="font-bold text-center">Balance</h1>
+                <h1 className="font-bold text-center">Incomes</h1>
+                <h1 className="font-bold text-center">Expenses</h1>
+                <h1 className="font-bold text-center">Transfers In</h1>
+                <h1 className="font-bold text-center">Transfers Out</h1>
+                <h1 className="font-bold text-center">Transfers Tax</h1>
+                <h1 className="font-bold text-center">Adjustments</h1>
+                <h1 className="font-bold text-center">Actions</h1>
                 {/* Isi */}
                 {allAc.map((account,index) => (
                     <>
                         <div key={index}>
                             {account.name}
                         </div>
-                        <div>
-                            {account.initial_balance}
+                        <div className="text-right">
+                            Rp{account.initial_balance}
                         </div>
-                        <div>
+                        <div className="text-right">
                             {account.current_balance}
                         </div>
-                        <div>
+                        <div className="text-right">
                             {account.total_incomes}
                         </div>
-                        <div>
+                        <div className="text-right">
                             {account.total_expenses}
                         </div>
-                        <div>
+                        <div className="text-right">
                             {account.total_transfer_in}
                         </div>
-                        <div>
+                        <div className="text-right">
                             {account.total_transfer_out}
                         </div>
-                        <div>
+                        <div className="text-right">
                             {account.total_transfer_tax}
                         </div>
-                        <div>
+                        <div className="text-right">
                             {account.total_adjustments}
+                        </div>
+                        <div className="text-center flex items-center justify-center gap-[8px]">
+                            <AiOutlineEdit/>
+                            <AiOutlineDelete/>
                         </div>
                     </>
                 ))}
